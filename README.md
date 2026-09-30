@@ -84,16 +84,7 @@ main ─► boots the app
 
 Note: `main.js` is loaded **last** (not first as in the folder listing) because it needs every other module to exist before it boots.
 
-### About the `assets/` folders
 
-The game is drawn entirely with the Canvas 2D API (characters, monsters, tiles, the win-screen trophy), so there are currently no image files to load — which keeps it instant to start and fully self-contained. `assets/images/` and `assets/sprites/` are kept as reserved locations for future art (e.g. swapping the procedural characters for sprite sheets).
 
-## Enhancements in this version
-
-- **Best scores** — the best score for each map / mode / difficulty is saved in `localStorage`, shown on the map-select cards and on the results screen, with a "New Best!" marker.
-- **Auto-pause** — the game pauses automatically when you switch browser tabs, so the clock, monsters and AI don't keep running unseen.
-- **More monsters** — every map now has at least two.
-- **Cleaner results screen** — scrollable, contained buttons, and a minimal trophy icon on victory. A loss to the computer now reads "THE COMPUTER WON" instead of "TIME UP".
-- **Simplified menus** — removed the duplicate "Map Selection" entry and the unused Sound/Music toggles.
 
 
