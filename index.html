@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TREASURE HUNT</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="menuScreen" class="screen active">
+  <h1 class="title">TREASURE HUNT</h1>
+  <div class="subtitle">A 2D CANVAS ADVENTURE — COMPUTER GRAPHICS PROJECT</div>
+  <div class="menu-list">
+    <button class="btn primary" onclick="goto('mapSelect')">Start Game</button>
+    <button class="btn" onclick="goto('instructions')">Instructions</button>
+    <button class="btn" onclick="goto('settings')">Settings</button>
+  </div>
+</div>
+
+<div id="mapSelectScreen" class="screen">
+  <div class="topbar"><button class="backbtn" onclick="goto('menu')">&larr; Back</button><span class="subtitle" style="margin:0">SELECT MAP</span><span></span></div>
+  <div class="grid-cards" id="mapCards"></div>
+</div>
+
+<div id="modeScreen" class="screen">
+  <div class="topbar"><button class="backbtn" onclick="goto('mapSelect')">&larr; Back</button><span class="subtitle" style="margin:0">GAME MODE</span><span></span></div>
+  <h1 class="title" style="font-size:26px">CHOOSE MODE</h1>
+  <div class="menu-list">
+    <button class="btn primary" onclick="setMode('time')">Time Challenge — race the clock alone</button>
+    <button class="btn" id="competeBtn" onclick="setMode('compete')">Compete with Computer — race an AI opponent</button>
+  </div>
+</div>
+
+<div id="diffScreen" class="screen">
+  <div class="topbar"><button class="backbtn" onclick="goto('mode')">&larr; Back</button><span class="subtitle" style="margin:0">DIFFICULTY</span><span></span></div>
+  <h1 class="title" style="font-size:26px">CHOOSE DIFFICULTY</h1>
+  <div class="menu-list">
+    <button class="btn" onclick="setDiff('easy')">Easy — 2:30, slower opponent</button>
+    <button class="btn" onclick="setDiff('medium')">Medium — 1:40, balanced opponent</button>
+    <button class="btn" onclick="setDiff('hard')">Hard — 1:15, near-optimal opponent</button>
+  </div>
+</div>
+
+<div id="instructionsScreen" class="screen">
+  <div class="topbar"><button class="backbtn" onclick="goto('menu')">&larr; Back</button><span class="subtitle" style="margin:0">INSTRUCTIONS</span><span></span></div>
+  <div class="instr-text">
+    <h4>Controls</h4>
+    <span class="kbd">W/&uarr;</span> Up &nbsp; <span class="kbd">S/&darr;</span> Down &nbsp; <span class="kbd">A/&larr;</span> Left &nbsp; <span class="kbd">D/&rarr;</span> Right &nbsp; <span class="kbd">M</span> Switch World (Mirror map) &nbsp; <span class="kbd">P/ESC</span> Pause
+    <h4>Objective</h4>
+    Explore the map, collect keys and clues, avoid hazards, unlock restricted areas and reach the treasure before time runs out.
+    <h4>Collectibles</h4>
+    Coins (+10), Clues (+50), Keys (+100, unlock doors), Checkpoints (+75, saves your respawn point).
+    <h4>Hints</h4>
+    Spend score on four hint tiers: Basic Direction (-50), Navigation (-100), Advanced Path (-150), Key/Clue Location (-100). Score never goes below zero and hints have a short cooldown.
+    <h4>Computer Opponent</h4>
+    In Compete mode a real A* pathfinding opponent races you to the treasure. It respects walls, doors and objectives — it never teleports or cheats.
+    <h4>Lives &amp; Health</h4>
+    Hazard tiles cost 25 health. At 0 health you lose a life and respawn at your last checkpoint. Lose all 3 lives and it's game over.
+  </div>
+</div>
+
+<div id="settingsScreen" class="screen">
+  <div class="topbar"><button class="backbtn" onclick="goto('menu')">&larr; Back</button><span class="subtitle" style="margin:0">SETTINGS</span><span></span></div>
+  <div class="settings-list">
+    <div class="setting-row">Animations<div class="toggle on" id="t_anim" onclick="toggleSetting('anim')"></div></div>
+    <div class="setting-row">Show Minimap<div class="toggle on" id="t_minimap" onclick="toggleSetting('minimap')"></div></div>
+  </div>
+  <div class="small-note">Saved automatically to this browser.</div>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div id="gameWrap">
+    <canvas id="gameCanvas" width="720" height="480"></canvas>
+    <div class="hud">
+      <div class="hud-panel hud-left">
+        <div class="mapname" id="hudMapName">MAP</div>
+        <div class="stat-row"><span class="hearts" id="hudLives">&hearts;&hearts;&hearts;</span><span id="hudScore">Score: 500</span></div>
+        <div id="healthbar"><div id="healthfill"></div></div>
+        <div class="objectives" id="hudObjectives"></div>
+        <div class="inv" id="hudInv"></div>
+        <div class="hint-panel" id="hintPanel"></div>
+        <div class="hint-msg" id="hintMsg"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;">
+        <div class="hud-panel"><div class="timer" id="hudTimer">02:00</div></div>
+        <div class="minimap-panel">
+          <div class="mm-label">MINIMAP</div>
+          <canvas id="minimapCanvas" width="170" height="120"></canvas>
+        </div>
+        <button id="pauseBtn" onclick="pauseGame()">&#10073;&#10073; Pause</button>
+      </div>
+    </div>
+    <div class="overlay" id="pauseOverlay">
+      <div class="box">
+        <h2>PAUSED</h2>
+        <div class="menu-list">
+          <button class="btn primary" onclick="resumeGame()">Resume</button>
+          <button class="btn" onclick="restartMap()">Restart</button>
+          <button class="btn" onclick="goto('instructions');closeOverlay('pauseOverlay')">Instructions</button>
+          <button class="btn" onclick="quitToMenu()">Main Menu</button>
+        </div>
+      </div>
+    </div>
+    <div class="overlay" id="resultsOverlay">
+      <div class="box">
+        <h2 id="resultsTitle">RESULTS</h2>
+        <canvas id="winScene" width="240" height="130" style="display:none;margin:0 auto 12px;border-radius:6px;background:#0d0f14;"></canvas>
+        <div class="results-table" id="resultsBody"></div>
+        <div class="menu-list">
+          <button class="btn primary" onclick="restartMap()">Retry</button>
+          <button class="btn" onclick="goto('mapSelect')">Map Selection</button>
+          <button class="btn" onclick="quitToMenu()">Main Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modules load in dependency order. Everything attaches to a single
+     global "TH" namespace object (no ES modules), so this also works
+     when the file is opened directly from disk (file://) rather than
+     through a local server. -->
+<script src="js/maps.js"></script>
+<script src="js/pathfinding.js"></script>
+<script src="js/collision.js"></script>
+<script src="js/gameState.js"></script>
+<script src="js/score.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/hints.js"></script>
+<script src="js/animation.js"></script>
+<script src="js/camera.js"></script>
+<script src="js/collectibles.js"></script>
+<script src="js/player.js"></script>
+<script src="js/computerOpponent.js"></script>
+<script src="js/obstacles.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
