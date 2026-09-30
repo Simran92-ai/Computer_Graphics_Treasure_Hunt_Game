@@ -63,9 +63,6 @@ treasure-hunt/
 │   ├── collectibles.js     Tile pickups, hazards, doors, objectives
 │   ├── obstacles.js        Patrolling hazards and monsters
 │   └── maps.js             Tile constants + all map definitions
-├── assets/
-│   ├── images/             (reserved — see note below)
-│   └── sprites/            (reserved — see note below)
 └── README.md
 ```
 
@@ -99,9 +96,4 @@ The game is drawn entirely with the Canvas 2D API (characters, monsters, tiles, 
 - **Cleaner results screen** — scrollable, contained buttons, and a minimal trophy icon on victory. A loss to the computer now reads "THE COMPUTER WON" instead of "TIME UP".
 - **Simplified menus** — removed the duplicate "Map Selection" entry and the unused Sound/Music toggles.
 
-## Ideas for later
 
-- Sprite-sheet art loaded from `assets/sprites/`
-- Sound effects and music (would bring the Sound/Music settings back)
-- Touch / on-screen joystick controls for mobile
-- More maps and a level editor
