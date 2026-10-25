@@ -91,6 +91,15 @@
         <button id="pauseBtn" onclick="pauseGame()">&#10073;&#10073; Pause</button>
       </div>
     </div>
+     <div id="touchControls" class="touch-controls">
+      <div class="dpad">
+        <button class="dbtn dbtn-up" data-key="w" aria-label="Move up">&#9650;</button>
+        <button class="dbtn dbtn-left" data-key="a" aria-label="Move left">&#9664;</button>
+        <button class="dbtn dbtn-right" data-key="d" aria-label="Move right">&#9654;</button>
+        <button class="dbtn dbtn-down" data-key="s" aria-label="Move down">&#9660;</button>
+      </div>
+      <button id="worldSwitchBtn" class="dbtn worldbtn" aria-label="Switch world">M</button>
+    </div>
     <div class="overlay" id="pauseOverlay">
       <div class="box">
         <h2>PAUSED</h2>
@@ -137,6 +146,7 @@
 <script src="js/renderer.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/game.js"></script>
+<script src="js/touchControls.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

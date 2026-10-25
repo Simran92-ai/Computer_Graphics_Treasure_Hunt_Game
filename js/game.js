@@ -110,5 +110,5 @@
 
   window.TH = window.TH || {};
   TH.Game = {start, stop, pause, resume, restart, loseLife, finishPlayer, finishAI, endGame,
-    isRunning:()=>TH.GameState.State.running};
+    isRunning:()=>TH.GameState.State.running, keys};
 })();

@@ -57,6 +57,7 @@
     exposeGlobalHandlers();
     initAutoPause();
     initResizeHandling();
+    TH.TouchControls.init();
   }
 
   if(document.readyState==='loading'){
